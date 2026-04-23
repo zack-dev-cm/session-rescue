@@ -1,8 +1,10 @@
 const status = document.querySelector("#status");
 const sessionsNode = document.querySelector("#sessions");
 const snapshotButton = document.querySelector("#snapshot");
+const autosaveButton = document.querySelector("#autosave");
 const libraryButton = document.querySelector("#library");
 const riskNode = document.querySelector("#risk");
+let autoEnabled = false;
 
 snapshotButton.addEventListener("click", async () => {
   snapshotButton.disabled = true;
@@ -21,6 +23,18 @@ libraryButton.addEventListener("click", () => {
   chrome.tabs.create({ url: chrome.runtime.getURL("src/library.html") });
 });
 
+autosaveButton.addEventListener("click", async () => {
+  autosaveButton.disabled = true;
+  const response = await sendMessage({ type: autoEnabled ? "disableAutosave" : "enableAutosave" });
+  autosaveButton.disabled = false;
+  if (!response.ok) {
+    status.textContent = response.error;
+    return;
+  }
+  autoEnabled = Boolean(response.autoEnabled);
+  await render();
+});
+
 async function render() {
   const response = await sendMessage({ type: "list" });
   if (!response.ok) {
@@ -29,9 +43,14 @@ async function render() {
   }
 
   const sessions = response.snapshots || [];
+  autoEnabled = Boolean(response.autoEnabled);
+  autosaveButton.textContent = autoEnabled ? "Disable autosave" : "Enable autosave";
+  autosaveButton.title = autoEnabled
+    ? "Stop automatic local snapshots"
+    : "Start automatic local snapshots of open tab URLs and titles";
   status.textContent = sessions.length
-    ? `${sessions.length} snapshots saved locally.`
-    : "No snapshots saved yet.";
+    ? `${sessions.length} snapshots saved locally. Autosave is ${autoEnabled ? "on" : "off"}.`
+    : `No snapshots saved yet. Autosave is ${autoEnabled ? "on" : "off"}.`;
   renderRisk(response.riskState);
   sessionsNode.replaceChildren(...sessions.slice(0, 4).map(renderSession));
 }

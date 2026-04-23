@@ -7,7 +7,7 @@ portable backups.
 ## MVP Scope
 
 - snapshot all normal browser windows and restorable tabs
-- automatic local snapshots on install/startup and a periodic timer
+- user-enabled automatic local snapshots
 - manual snapshot from the toolbar popup
 - session library with search, restore, delete, export, and import
 - local IndexedDB persistence
@@ -15,6 +15,7 @@ portable backups.
 
 The MVP stores only tab URLs, titles, pinned/active state, window grouping, and
 capture timestamps. It does not read page content.
+Autosave is off by default.
 
 ## Load Unpacked
 

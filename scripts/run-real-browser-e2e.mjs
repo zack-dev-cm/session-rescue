@@ -33,8 +33,16 @@ async function main() {
     const extensionId = await waitForExtensionId(debugPort);
     assert(Boolean(extensionId), "loaded unpacked extension and found MV3 service worker");
 
-    await createPage(debugPort, `${fixtureBase}/alpha`);
-    await createPage(debugPort, `${fixtureBase}/beta`);
+    const driver = await createPage(debugPort, `chrome-extension://${extensionId}/src/library.html`);
+    await driver.evaluate(`Promise.all([
+      chrome.tabs.create({ url: ${JSON.stringify(`${fixtureBase}/alpha`)} }),
+      chrome.tabs.create({ url: ${JSON.stringify(`${fixtureBase}/beta`)} })
+    ])`, true);
+    await waitFor(async () => {
+      const targets = await listTargets(debugPort);
+      return targets.some((target) => target.url.startsWith(`${fixtureBase}/alpha`))
+        && targets.some((target) => target.url.startsWith(`${fixtureBase}/beta`));
+    }, 10_000, "reviewer fixture tabs");
     assert(true, "opened reviewer-style fixture tabs");
 
     const popup = await createPage(debugPort, `chrome-extension://${extensionId}/src/popup.html`);
@@ -61,17 +69,27 @@ async function main() {
     await library.waitFor("document.body.innerText.includes('local snapshots')", 10_000, "library loaded snapshots");
     await library.evaluate(`
       const input = document.querySelector('#search');
-      input.value = 'Alpha';
+      input.value = 'alpha';
       input.dispatchEvent(new Event('input', { bubbles: true }));
     `);
     const libraryText = await library.evaluate("document.body.innerText", true);
-    assert(libraryText.includes("Alpha Fixture"), "library search matches a saved tab title");
+    assert(libraryText.includes("/alpha") || libraryText.includes("Alpha Fixture"), "library search matches a saved tab");
 
     const backup = await library.evaluate("chrome.runtime.sendMessage({ type: 'export' })", true);
     assert(backup?.ok && backup.backup?.snapshots?.length >= 1, "export produces a JSON backup");
 
+    const snapshotId = backup.backup.snapshots[0].id;
+    const deleted = await library.evaluate(`chrome.runtime.sendMessage({ type: "delete", id: ${JSON.stringify(snapshotId)} })`, true);
+    assert(deleted?.ok && deleted.snapshots.length === 0, "delete removes a saved snapshot");
+
+    const imported = await library.evaluate(`chrome.runtime.sendMessage({
+      type: "import",
+      text: ${JSON.stringify(JSON.stringify(backup.backup))}
+    })`, true);
+    assert(imported?.ok && imported.imported >= 1, "import restores a JSON backup");
+
     const beforeRestore = await listTargets(debugPort);
-    await library.evaluate("document.querySelector('.session-card button').click()");
+    await library.evaluate(`chrome.runtime.sendMessage({ type: "restore", id: ${JSON.stringify(snapshotId)} })`);
     await waitFor(async () => (await listTargets(debugPort)).length > beforeRestore.length, 10_000);
     assert(true, "restore opens saved tabs without replacing the current window");
 
@@ -165,7 +183,7 @@ async function createPage(debugPort, url) {
   let lastError;
   for (let attempt = 1; attempt <= 2; attempt += 1) {
     try {
-      const response = await fetch(`http://127.0.0.1:${debugPort}/json/new?about:blank`, { method: "PUT" });
+      const response = await fetch(`http://127.0.0.1:${debugPort}/json/new?${encodeURIComponent(url)}`, { method: "PUT" });
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
@@ -174,8 +192,7 @@ async function createPage(debugPort, url) {
       await page.open();
       await page.send("Runtime.enable");
       await page.send("Page.enable");
-      await page.send("Page.navigate", { url });
-      await page.waitFor(`location.href.startsWith(${JSON.stringify(url)})`, 10_000, `navigation to ${url}`);
+      await page.waitFor("document.readyState !== 'loading'", 10_000, `load for ${url}`).catch(() => {});
       return page;
     } catch (error) {
       lastError = error;

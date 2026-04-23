@@ -17,35 +17,35 @@ import {
 } from "./snapshot-store.js";
 
 const AUTO_ALARM = "session-rescue-auto-snapshot";
+const CHANGE_ALARM = "session-rescue-change-snapshot";
 const RISK_STATE = "riskState";
-let debounceTimer;
+const AUTO_ENABLED = "autoEnabled";
 
 chrome.runtime.onInstalled.addListener(() => {
   configureAlarms();
-  captureAndStore("install", { allowDuplicate: false }).catch(console.error);
+  setMeta(AUTO_ENABLED, false).catch(console.error);
 });
 
 chrome.runtime.onStartup.addListener(() => {
   configureAlarms();
-  captureAndStore("startup", { allowDuplicate: false }).catch(console.error);
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === AUTO_ALARM) {
-    captureAndStore("auto", { allowDuplicate: false }).catch(console.error);
+  if (alarm.name === AUTO_ALARM || alarm.name === CHANGE_ALARM) {
+    captureIfAutosaveEnabled().catch(console.error);
   }
 });
 
-chrome.tabs.onCreated.addListener(() => queueAutoSnapshot());
-chrome.tabs.onRemoved.addListener(() => queueAutoSnapshot());
+chrome.tabs.onCreated.addListener(() => queueAutoSnapshot().catch(console.error));
+chrome.tabs.onRemoved.addListener(() => queueAutoSnapshot().catch(console.error));
 chrome.tabs.onUpdated.addListener((_tabId, changeInfo) => {
   if (changeInfo.url || changeInfo.title || changeInfo.status === "complete") {
-    queueAutoSnapshot();
+    queueAutoSnapshot().catch(console.error);
   }
 });
-chrome.tabs.onMoved.addListener(() => queueAutoSnapshot());
-chrome.tabs.onAttached.addListener(() => queueAutoSnapshot());
-chrome.tabs.onDetached.addListener(() => queueAutoSnapshot());
+chrome.tabs.onMoved.addListener(() => queueAutoSnapshot().catch(console.error));
+chrome.tabs.onAttached.addListener(() => queueAutoSnapshot().catch(console.error));
+chrome.tabs.onDetached.addListener(() => queueAutoSnapshot().catch(console.error));
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   handleMessage(message)
@@ -59,7 +59,19 @@ async function handleMessage(message = {}) {
     case "capture":
       return { snapshot: await captureAndStore("manual", { allowDuplicate: true }) };
     case "list":
-      return { snapshots: await getSnapshots(), riskState: await getMeta(RISK_STATE) };
+      return {
+        snapshots: await getSnapshots(),
+        riskState: await getMeta(RISK_STATE),
+        autoEnabled: Boolean(await getMeta(AUTO_ENABLED, false)),
+      };
+    case "enableAutosave":
+      await setMeta(AUTO_ENABLED, true);
+      configureAlarms();
+      return { autoEnabled: true, snapshot: await captureAndStore("manual", { allowDuplicate: false }) };
+    case "disableAutosave":
+      await setMeta(AUTO_ENABLED, false);
+      await chrome.alarms.clear(CHANGE_ALARM);
+      return { autoEnabled: false };
     case "restore":
       return restoreSnapshot(message.id);
     case "delete":
@@ -91,8 +103,8 @@ async function handleMessage(message = {}) {
 }
 
 async function captureAndStore(reason, options = {}) {
-  const windows = await chrome.windows.getAll({ populate: true, windowTypes: ["normal"] });
-  const current = buildSnapshot(windows, new Date(), reason);
+  const windows = await chrome.windows.getAll({ populate: true });
+  const current = buildSnapshot(windows.filter((window) => window.type === "normal"), new Date(), reason);
   if (!current.tabCount) {
     throw new Error("No restorable HTTP or HTTPS tabs found");
   }
@@ -148,11 +160,16 @@ function configureAlarms() {
   });
 }
 
-function queueAutoSnapshot() {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(() => {
-    captureAndStore("auto", { allowDuplicate: false }).catch(console.error);
-  }, 1200);
+async function captureIfAutosaveEnabled() {
+  if (await getMeta(AUTO_ENABLED, false)) {
+    await captureAndStore("auto", { allowDuplicate: false });
+  }
+}
+
+async function queueAutoSnapshot() {
+  if (await getMeta(AUTO_ENABLED, false)) {
+    chrome.alarms.create(CHANGE_ALARM, { delayInMinutes: 1 });
+  }
 }
 
 async function updateBadge(riskState) {

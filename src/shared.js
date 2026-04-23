@@ -4,8 +4,12 @@ export const SNAPSHOT_STORE = "snapshots";
 export const META_STORE = "meta";
 export const MAX_SNAPSHOTS = 60;
 export const MAX_IMPORT_BYTES = 2_000_000;
+export const MAX_WINDOWS_PER_SNAPSHOT = 20;
+export const MAX_TABS_PER_WINDOW = 50;
+export const MAX_TABS_PER_SNAPSHOT = 200;
 export const AUTO_SNAPSHOT_MINUTES = 10;
 export const LOSS_THRESHOLD_TABS = 3;
+const EXCLUDED_HOSTS = new Set(["chromewebstore.google.com", "chrome.google.com"]);
 
 export function isRestorableUrl(value) {
   if (!value || typeof value !== "string") {
@@ -13,18 +17,19 @@ export function isRestorableUrl(value) {
   }
   try {
     const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:";
+    return (url.protocol === "http:" || url.protocol === "https:") && !EXCLUDED_HOSTS.has(url.hostname);
   } catch {
     return false;
   }
 }
 
 export function normalizeTab(tab, fallbackIndex = 0) {
-  if (!tab || !isRestorableUrl(tab.url)) {
+  const url = tab?.url || tab?.pendingUrl;
+  if (!tab || !isRestorableUrl(url)) {
     return null;
   }
   return {
-    url: tab.url,
+    url,
     title: normalizeTitle(tab.title),
     pinned: Boolean(tab.pinned),
     active: Boolean(tab.active),
@@ -79,12 +84,21 @@ export function sanitizeSnapshot(input) {
     throw new Error("Snapshot must be an object");
   }
   const createdAt = validDateString(input.createdAt) ? input.createdAt : new Date().toISOString();
-  const windows = (input.windows || [])
+  const rawWindows = Array.isArray(input.windows) ? input.windows : [];
+  const rawTabCount = rawWindows.reduce((count, window) => count + (Array.isArray(window?.tabs) ? window.tabs.length : 0), 0);
+  if (rawWindows.length > MAX_WINDOWS_PER_SNAPSHOT || rawTabCount > MAX_TABS_PER_SNAPSHOT) {
+    throw new Error(`Snapshot exceeds the ${MAX_TABS_PER_SNAPSHOT} tab safety limit`);
+  }
+  const windows = rawWindows
+    .slice(0, MAX_WINDOWS_PER_SNAPSHOT)
     .map((window) => sanitizeWindow(window))
     .filter(Boolean);
   const tabCount = windows.reduce((count, window) => count + window.tabs.length, 0);
   if (!tabCount) {
     throw new Error("Snapshot does not contain restorable HTTP or HTTPS tabs");
+  }
+  if (tabCount > MAX_TABS_PER_SNAPSHOT) {
+    throw new Error(`Snapshot exceeds the ${MAX_TABS_PER_SNAPSHOT} tab safety limit`);
   }
   const signature = snapshotSignature(windows);
   return {
@@ -184,8 +198,9 @@ export function sortSnapshots(a, b) {
 
 function sanitizeWindow(window) {
   const tabs = (window?.tabs || [])
+    .slice(0, MAX_TABS_PER_WINDOW)
     .map((tab, index) => ({
-      url: tab?.url,
+      url: tab?.url || tab?.pendingUrl,
       title: normalizeTitle(tab?.title),
       pinned: Boolean(tab?.pinned),
       active: Boolean(tab?.active),

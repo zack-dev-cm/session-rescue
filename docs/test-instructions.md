@@ -15,6 +15,8 @@ No login, account, backend, API key, or paid service is required.
 9. Delete the snapshot, then import the exported JSON backup.
 10. Click `Restore` on the imported snapshot and confirm Chrome opens the saved
     URLs in a new window.
+11. Optional: click `Enable autosave` in the popup and confirm the popup states
+    autosave is on.
 
 The extension does not operate on Chrome Web Store pages or `chrome://` pages.
 It stores only tab metadata, not page content.

@@ -11,7 +11,7 @@
   "allowed_public_domains": ["session-rescue.pages.dev"],
   "single_purpose": "Session Rescue saves local snapshots of the user's open browser tabs and windows so they can restore, search, export, and import browser sessions.",
   "permission_justifications": {
-    "alarms": "Runs a low-frequency local snapshot timer so users have a recent recovery point after accidental tab or window loss.",
+    "alarms": "Runs low-frequency local snapshots only after the user enables autosave.",
     "tabs": "Reads open tab URLs, titles, pinned state, and window grouping, and restores selected sessions when the user requests it."
   },
   "privacy_practices": {
@@ -26,6 +26,7 @@
   "reviewer_notes": [
     "No account, login, API key, backend, or paid service is required.",
     "The extension stores tab metadata only and does not capture page content.",
+    "Autosave is off by default and starts only after the user enables it in the popup.",
     "Use https://session-rescue.pages.dev/review/ for exact smoke-test steps and sample backup JSON content."
   ],
   "assets": {

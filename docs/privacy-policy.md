@@ -4,6 +4,9 @@ Effective date: 2026-04-23
 
 Session Rescue saves browser session snapshots locally so users can restore
 tabs after accidental loss and keep portable backups of their own sessions.
+Manual snapshots happen only when the user clicks `Snapshot now`. Automatic
+snapshots are off by default and start only after the user clicks
+`Enable autosave`.
 
 ## Data Handled
 
@@ -27,9 +30,10 @@ searches, imports, exports, or usage events to a backend service.
 ## Export, Import, And Deletion
 
 Users can export a JSON backup file from the library page and import compatible
-JSON backups later. Users can delete individual snapshots from the library.
-Removing the extension deletes extension-local storage according to Chrome's
-normal extension data behavior.
+JSON backups later. Imported backups are limited by file size, tab count, and
+restorable URL schemes. Users can delete individual snapshots or clear all
+snapshots from the library. Removing the extension deletes extension-local
+storage according to Chrome's normal extension data behavior.
 
 ## Chrome Web Store User Data Policy
 
