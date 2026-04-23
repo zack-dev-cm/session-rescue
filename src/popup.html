@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Session Rescue</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="popup">
+    <main>
+      <header class="topbar">
+        <div>
+          <h1>Session Rescue</h1>
+          <p id="status">Loading sessions...</p>
+        </div>
+      </header>
+      <section id="risk" class="risk hidden"></section>
+      <div class="actions">
+        <button id="snapshot" class="primary">Snapshot now</button>
+        <button id="library">Open library</button>
+      </div>
+      <section>
+        <h2>Latest snapshots</h2>
+        <div id="sessions" class="session-list"></div>
+      </section>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

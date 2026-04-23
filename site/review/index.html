@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Session Rescue Reviewer Guide</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header>
+      <nav class="shell">
+        <a class="brand" href="/">Session Rescue</a>
+        <div class="links">
+          <a href="/privacy/">Privacy</a>
+          <a href="/support/">Support</a>
+        </div>
+      </nav>
+    </header>
+    <main class="shell">
+      <h1>Reviewer Guide</h1>
+      <p>No login, account, API key, backend, or payment is required.</p>
+      <h2>Smoke test</h2>
+      <ol>
+        <li>Open two normal HTTPS pages.</li>
+        <li>Click the Session Rescue toolbar button.</li>
+        <li>Click <code>Snapshot now</code>.</li>
+        <li>Open the library and confirm the snapshot appears.</li>
+        <li>Search by one domain or title.</li>
+        <li>Export JSON, delete the snapshot, import the JSON, then restore it.</li>
+      </ol>
+      <h2>Expected data handling</h2>
+      <p>The extension stores tab metadata locally and does not capture page content or contact a backend service.</p>
+    </main>
+  </body>
+</html>

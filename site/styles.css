@@ -1,0 +1,174 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f7f8fa;
+  color: #18202f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: #1559b7;
+}
+
+.shell {
+  width: min(960px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+header {
+  background: #ffffff;
+  border-bottom: 1px solid #dbe1ea;
+}
+
+nav {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.brand {
+  font-weight: 760;
+  color: #18202f;
+  text-decoration: none;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.links a {
+  color: #40506a;
+  text-decoration: none;
+}
+
+main {
+  padding: 64px 0;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+  gap: 40px;
+  align-items: center;
+}
+
+h1 {
+  margin: 0 0 18px;
+  font-size: 54px;
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+h2 {
+  margin: 42px 0 14px;
+  font-size: 28px;
+}
+
+p,
+li {
+  line-height: 1.62;
+  color: #40506a;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid #18202f;
+  border-radius: 6px;
+  background: #18202f;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.button.secondary {
+  background: #ffffff;
+  color: #18202f;
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #dbe1ea;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 20px 50px rgba(24, 32, 47, 0.08);
+}
+
+.session-list {
+  display: grid;
+  gap: 12px;
+}
+
+.row {
+  border: 1px solid #dbe1ea;
+  border-radius: 7px;
+  padding: 14px;
+  background: #fdfefe;
+}
+
+.row strong {
+  display: block;
+}
+
+.row span {
+  color: #60708a;
+  font-size: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.mini {
+  background: #ffffff;
+  border: 1px solid #dbe1ea;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+code {
+  background: #edf1f6;
+  border-radius: 4px;
+  padding: 2px 5px;
+}
+
+@media (max-width: 760px) {
+  .hero,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 40px;
+  }
+
+  nav {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 16px 0;
+  }
+}

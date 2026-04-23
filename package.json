@@ -1,0 +1,16 @@
+{
+  "name": "session-rescue",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local-first Chrome extension for browser session snapshots, restore, and portable backups.",
+  "scripts": {
+    "prepare:assets": "node scripts/generate-assets.mjs",
+    "test": "node --test",
+    "validate": "node scripts/validate-extension.mjs",
+    "check:cws-readiness": "node scripts/check-cws-readiness.mjs",
+    "package": "npm run prepare:assets && node scripts/build-release.mjs",
+    "test:e2e": "npm run package && node scripts/run-real-browser-e2e.mjs",
+    "verify": "npm test && npm run validate && CWS_READINESS_OFFLINE=1 npm run check:cws-readiness && npm run test:e2e"
+  }
+}

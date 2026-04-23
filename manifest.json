@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Session Rescue",
+  "description": "Save local browser session snapshots, restore tabs, and export portable backups.",
+  "version": "0.1.0",
+  "minimum_chrome_version": "120",
+  "icons": {
+    "16": "assets/icon-16.png",
+    "32": "assets/icon-32.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  },
+  "action": {
+    "default_title": "Session Rescue",
+    "default_popup": "src/popup.html"
+  },
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "options_page": "src/library.html",
+  "permissions": [
+    "alarms",
+    "tabs"
+  ]
+}

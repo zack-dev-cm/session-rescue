@@ -1,0 +1,37 @@
+{
+  "name": "Session Rescue",
+  "version": "0.1.0",
+  "category": "Productivity",
+  "official_url": "https://session-rescue.pages.dev/",
+  "homepage_url": "https://session-rescue.pages.dev/",
+  "support_url": "https://session-rescue.pages.dev/support/",
+  "privacy_policy_url": "https://session-rescue.pages.dev/privacy/",
+  "reviewer_instructions_url": "https://session-rescue.pages.dev/review/",
+  "source_url": "https://github.com/zack-dev-cm/session-rescue",
+  "allowed_public_domains": ["session-rescue.pages.dev"],
+  "single_purpose": "Session Rescue saves local snapshots of the user's open browser tabs and windows so they can restore, search, export, and import browser sessions.",
+  "permission_justifications": {
+    "alarms": "Runs a low-frequency local snapshot timer so users have a recent recovery point after accidental tab or window loss.",
+    "tabs": "Reads open tab URLs, titles, pinned state, and window grouping, and restores selected sessions when the user requests it."
+  },
+  "privacy_practices": {
+    "data_categories": [
+      "Web browsing activity limited to tab URLs, tab titles, window grouping, pinned state, and capture timestamps"
+    ],
+    "storage": "All session snapshots are stored locally in IndexedDB in the user's browser profile.",
+    "network": "The extension does not send session data, tab URLs, searches, imports, exports, or usage events to a server.",
+    "limited_use": "Use of information received from Chrome APIs complies with the Chrome Web Store User Data Policy, including the Limited Use requirements.",
+    "ads_or_sale": "No ads, analytics, sale of user data, or third-party transfer."
+  },
+  "reviewer_notes": [
+    "No account, login, API key, backend, or paid service is required.",
+    "The extension stores tab metadata only and does not capture page content.",
+    "Use https://session-rescue.pages.dev/review/ for exact smoke-test steps and sample backup JSON content."
+  ],
+  "assets": {
+    "store_icon": "docs/cws/assets/store-icon-128.png",
+    "screenshot": "docs/cws/assets/screenshot-library-1280x800.png",
+    "small_promo": "docs/cws/assets/promo-small-440x280.png",
+    "marquee_promo": "docs/cws/assets/promo-marquee-1400x560.png"
+  }
+}

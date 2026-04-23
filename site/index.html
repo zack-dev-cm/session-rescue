@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Session Rescue</title>
+    <meta name="description" content="Local-first Chrome extension for browser session snapshots, restore, and portable backups.">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header>
+      <nav class="shell">
+        <a class="brand" href="/">Session Rescue</a>
+        <div class="links">
+          <a href="/privacy/">Privacy</a>
+          <a href="/support/">Support</a>
+          <a href="/review/">Reviewer guide</a>
+          <a href="https://github.com/zack-dev-cm/session-rescue">Source</a>
+        </div>
+      </nav>
+    </header>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <h1>Session Rescue</h1>
+          <p>Save local snapshots of open Chrome windows, restore tabs after accidental loss, and keep portable backups without an account or cloud service.</p>
+          <div class="actions">
+            <a class="button" href="/review/">Review steps</a>
+            <a class="button secondary" href="/privacy/">Privacy model</a>
+          </div>
+        </div>
+        <div class="panel" aria-label="Session Rescue preview">
+          <div class="session-list">
+            <div class="row">
+              <strong>Research sprint</strong>
+              <span>12 tabs across 2 windows</span>
+            </div>
+            <div class="row">
+              <strong>Design references</strong>
+              <span>7 tabs, restored yesterday</span>
+            </div>
+            <div class="row">
+              <strong>Release checklist</strong>
+              <span>5 tabs, exported as JSON</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="grid" aria-label="Core features">
+        <div class="mini">
+          <h2>Snapshot</h2>
+          <p>Save restorable tab metadata from normal Chrome windows into local storage.</p>
+        </div>
+        <div class="mini">
+          <h2>Restore</h2>
+          <p>Open a saved session in a new window when a tab group or research context is lost.</p>
+        </div>
+        <div class="mini">
+          <h2>Export</h2>
+          <p>Keep user-owned JSON backups that can be reimported later.</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

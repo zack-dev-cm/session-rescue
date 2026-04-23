@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Session Rescue Library</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="library">
+      <header class="library-header">
+        <div>
+          <h1>Session Library</h1>
+          <p id="summary">Loading local snapshots...</p>
+        </div>
+        <div class="toolbar">
+          <button id="snapshot" class="primary">Snapshot now</button>
+          <button id="export">Export JSON</button>
+          <label class="file-label">
+            Import JSON
+            <input id="import" type="file" accept="application/json,.json">
+          </label>
+          <button id="clear">Clear all</button>
+        </div>
+      </header>
+      <input id="search" class="search" type="search" placeholder="Search titles, URLs, or domains">
+      <section id="sessions" class="session-grid"></section>
+    </main>
+    <script type="module" src="library.js"></script>
+  </body>
+</html>

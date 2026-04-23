@@ -1,0 +1,166 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f6f8fb;
+  color: #172033;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+.file-label {
+  min-height: 34px;
+  border: 1px solid #c8d1df;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #172033;
+  font: inherit;
+  font-weight: 700;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+button.primary {
+  border-color: #1d4ed8;
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.popup {
+  width: 360px;
+  min-height: 460px;
+  background: #f6f8fb;
+}
+
+.popup main,
+.library {
+  padding: 18px;
+}
+
+.topbar,
+.library-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: 0;
+}
+
+h2 {
+  margin: 18px 0 10px;
+  font-size: 16px;
+  letter-spacing: 0;
+}
+
+p {
+  color: #526178;
+  line-height: 1.55;
+}
+
+.actions,
+.toolbar,
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.risk {
+  border: 1px solid #fdba74;
+  border-radius: 8px;
+  background: #fff7ed;
+  margin: 14px 0;
+  padding: 12px;
+}
+
+.hidden {
+  display: none;
+}
+
+.session-list,
+.session-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.session-card {
+  border: 1px solid #dce3ee;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.session-card strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.session-card span {
+  display: block;
+  color: #60708a;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.library {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.library-header {
+  margin-bottom: 18px;
+}
+
+.search {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #c8d1df;
+  border-radius: 7px;
+  font: inherit;
+  margin-bottom: 16px;
+  padding: 0 12px;
+}
+
+.session-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.session-card h2 {
+  margin-top: 0;
+}
+
+.session-card ol {
+  margin: 0 0 14px;
+  padding-left: 22px;
+}
+
+.session-card li {
+  color: #526178;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.file-label {
+  display: inline-flex;
+  align-items: center;
+}
+
+.file-label input {
+  display: none;
+}
