@@ -124,23 +124,26 @@ async function validatePackageSurface() {
 }
 
 async function validateAssets() {
-  const expectedDimensions = {
-    store_icon: [128, 128],
-    screenshot: [1280, 800],
-    small_promo: [440, 280],
-    marquee_promo: [1400, 560],
-  };
-  for (const [key, assetPath] of Object.entries(listing.assets)) {
-    const absolutePath = join(root, assetPath);
-    const fileStat = await stat(absolutePath);
-    assert(fileStat.size > 0, `${assetPath} is empty`);
-    const dimensions = await readPngMetadata(absolutePath);
-    const expected = expectedDimensions[key];
-    assert(dimensions.width === expected[0] && dimensions.height === expected[1],
-      `${assetPath} expected ${expected[0]}x${expected[1]}, got ${dimensions.width}x${dimensions.height}`);
-    assert(dimensions.bitDepth === 8 && dimensions.colorType === 2,
-      `${assetPath} must be an 8-bit 24-bit PNG without alpha`);
+  await validatePngAsset(listing.assets.store_icon, [128, 128]);
+  const screenshots = listing.assets.screenshots || [listing.assets.screenshot].filter(Boolean);
+  assert(screenshots.length >= 1 && screenshots.length <= 5, "listing must include 1 to 5 CWS screenshots");
+  for (const screenshot of screenshots) {
+    await validatePngAsset(screenshot, [1280, 800]);
   }
+  await validatePngAsset(listing.assets.small_promo, [440, 280]);
+  await validatePngAsset(listing.assets.marquee_promo, [1400, 560]);
+}
+
+async function validatePngAsset(assetPath, expected) {
+  assert(Boolean(assetPath), "asset path is required");
+  const absolutePath = join(root, assetPath);
+  const fileStat = await stat(absolutePath);
+  assert(fileStat.size > 0, `${assetPath} is empty`);
+  const dimensions = await readPngMetadata(absolutePath);
+  assert(dimensions.width === expected[0] && dimensions.height === expected[1],
+    `${assetPath} expected ${expected[0]}x${expected[1]}, got ${dimensions.width}x${dimensions.height}`);
+  assert(dimensions.bitDepth === 8 && dimensions.colorType === 2,
+    `${assetPath} must be an 8-bit 24-bit PNG without alpha`);
 }
 
 async function validateLiveUrls() {

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { mkdir, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { access, mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { deflateSync } from "node:zlib";
 
 const root = new URL("..", import.meta.url).pathname;
@@ -16,11 +16,19 @@ for (const size of [16, 32, 48, 128]) {
 }
 
 await writeFile(join(cwsDir, "store-icon-128.png"), png(128, 128, iconPainter(128)));
-await writeFile(join(cwsDir, "screenshot-library-1280x800.png"), png(1280, 800, screenshotPainter));
-await writeFile(join(cwsDir, "promo-small-440x280.png"), png(440, 280, promoPainter));
-await writeFile(join(cwsDir, "promo-marquee-1400x560.png"), png(1400, 560, marqueePainter));
+await writeIfMissing(join(cwsDir, "screenshot-library-1280x800.png"), png(1280, 800, screenshotPainter));
+await writeIfMissing(join(cwsDir, "promo-small-440x280.png"), png(440, 280, promoPainter));
+await writeIfMissing(join(cwsDir, "promo-marquee-1400x560.png"), png(1400, 560, marqueePainter));
 
-console.log("Generated Session Rescue assets");
+console.log("Prepared Session Rescue extension icons and preserved curated CWS media");
+
+async function writeIfMissing(filePath, data) {
+  try {
+    await access(filePath);
+  } catch {
+    await writeFile(filePath, data);
+  }
+}
 
 function iconPainter(size) {
   return (x, y) => {

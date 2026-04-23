@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header>
       <nav class="shell">
         <a class="brand" href="/">Session Rescue</a>
@@ -16,9 +17,10 @@
         </div>
       </nav>
     </header>
-    <main class="shell">
+    <main id="main" class="shell page">
       <h1>Reviewer Guide</h1>
-      <p>No login, account, API key, backend, or payment is required.</p>
+      <p class="lede">No login, account, API key, backend, or payment is required.</p>
+      <img class="page-visual" src="/assets/session-rescue-popup.png" width="1280" height="800" alt="Session Rescue popup showing manual snapshot, autosave opt-in, open library, and latest local snapshots.">
       <h2>Smoke test</h2>
       <ol>
         <li>Open two normal HTTPS pages.</li>
@@ -31,6 +33,8 @@
       </ol>
       <h2>Expected data handling</h2>
       <p>The extension stores tab metadata locally and does not capture page content or contact a backend service.</p>
+      <h2>Expected permissions</h2>
+      <p><code>tabs</code> is used to read and restore tab metadata. <code>alarms</code> is used only for local autosave after the user enables it.</p>
     </main>
   </body>
 </html>

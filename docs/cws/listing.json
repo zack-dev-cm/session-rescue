@@ -1,6 +1,6 @@
 {
   "name": "Session Rescue",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "chrome_web_store_item_id": "hoklaadapaobdbkeiacebnnciponcmnf",
   "category": "Workflow & Planning",
   "language": "English (United States)",
@@ -33,7 +33,11 @@
   ],
   "assets": {
     "store_icon": "docs/cws/assets/store-icon-128.png",
-    "screenshot": "docs/cws/assets/screenshot-library-1280x800.png",
+    "screenshots": [
+      "docs/cws/assets/screenshot-library-1280x800.png",
+      "docs/cws/assets/screenshot-search-1280x800.png",
+      "docs/cws/assets/screenshot-popup-1280x800.png"
+    ],
     "small_promo": "docs/cws/assets/promo-small-440x280.png",
     "marquee_promo": "docs/cws/assets/promo-marquee-1400x560.png"
   }

@@ -34,6 +34,19 @@ npm run verify
 The verification stack runs unit tests, manifest validation, CWS readiness
 checks, package creation, and a real-browser E2E flow.
 
+## CWS Visual Assets
+
+```bash
+npm run capture:cws-screenshots
+npm run check:site-render
+```
+
+The screenshot capture command packages the extension, loads it in Chrome, seeds
+sanitized fixture sessions, and writes real product screenshots to
+`docs/cws/assets/`. The render check opens the public site at mobile, tablet,
+and desktop widths, verifies images and overflow, and writes review screenshots
+to `dist/site-check/`. Promo art and site visuals are tracked project assets.
+
 ## Public Review Surface
 
 Chrome Web Store listing URLs, privacy disclosures, permission justifications,

@@ -18,3 +18,17 @@
   `hoklaadapaobdbkeiacebnnciponcmnf`.
 - Submitted version `0.1.0` for review. Dashboard status after submission:
   `Pending review`.
+- Updated Cloudflare Pages after visual-asset review:
+  `https://1ed9efdb.session-rescue.pages.dev`
+- Refreshed CWS screenshot set from the real packaged extension: full library,
+  filtered search, and popup.
+- Prepared version `0.1.1` for resubmission because runtime UI polish and CWS
+  listing assets changed after the `0.1.0` pending-review upload.
+- Built resubmission archive:
+  `dist/session-rescue-0.1.1.zip`
+- Archive SHA256:
+  `1c55c50d0dd2196d6194ff9f6502386a3ee9757c68f597b4324e1330e6d0aa2c`
+- Local and live gates passed for `0.1.1`.
+- Chrome Web Store dashboard resubmission is blocked until the publisher account
+  completes Google sign-in or re-verification in the `openclaw-cws-publisher`
+  browser profile.
