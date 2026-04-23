@@ -134,10 +134,12 @@ async function validateAssets() {
     const absolutePath = join(root, assetPath);
     const fileStat = await stat(absolutePath);
     assert(fileStat.size > 0, `${assetPath} is empty`);
-    const dimensions = await readPngDimensions(absolutePath);
+    const dimensions = await readPngMetadata(absolutePath);
     const expected = expectedDimensions[key];
     assert(dimensions.width === expected[0] && dimensions.height === expected[1],
       `${assetPath} expected ${expected[0]}x${expected[1]}, got ${dimensions.width}x${dimensions.height}`);
+    assert(dimensions.bitDepth === 8 && dimensions.colorType === 2,
+      `${assetPath} must be an 8-bit 24-bit PNG without alpha`);
   }
 }
 
@@ -171,12 +173,14 @@ async function collectPackageFiles(dir) {
   return files;
 }
 
-async function readPngDimensions(filePath) {
+async function readPngMetadata(filePath) {
   const buffer = await readFile(filePath);
   assert(buffer.toString("ascii", 1, 4) === "PNG", `${filePath} is not a PNG`);
   return {
     width: buffer.readUInt32BE(16),
     height: buffer.readUInt32BE(20),
+    bitDepth: buffer[24],
+    colorType: buffer[25],
   };
 }
 

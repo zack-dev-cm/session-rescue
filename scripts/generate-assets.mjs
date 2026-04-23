@@ -71,16 +71,15 @@ function marqueePainter(x, y, width, height) {
 }
 
 function png(width, height, painter) {
-  const raw = Buffer.alloc((width * 4 + 1) * height);
+  const raw = Buffer.alloc((width * 3 + 1) * height);
   let offset = 0;
   for (let y = 0; y < height; y += 1) {
     raw[offset++] = 0;
     for (let x = 0; x < width; x += 1) {
-      const [r, g, b, a] = painter(x, y, width, height);
+      const [r, g, b] = painter(x, y, width, height);
       raw[offset++] = r;
       raw[offset++] = g;
       raw[offset++] = b;
-      raw[offset++] = a;
     }
   }
   return Buffer.concat([
@@ -96,7 +95,7 @@ function ihdr(width, height) {
   buffer.writeUInt32BE(width, 0);
   buffer.writeUInt32BE(height, 4);
   buffer[8] = 8;
-  buffer[9] = 6;
+  buffer[9] = 2;
   return buffer;
 }
 
