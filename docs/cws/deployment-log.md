@@ -11,6 +11,6 @@
   - Privacy Policy URL: `https://session-rescue.pages.dev/privacy/`
   - Support URL: `https://session-rescue.pages.dev/support/`
   - Reviewer guide: `https://session-rescue.pages.dev/review/`
-
-Before Chrome Web Store submission, verify ownership in Google Search Console
-and select the production URL as the dashboard Official URL.
+- Google Search Console ownership verified with the HTML tag method.
+- Production URL should be selected as the Chrome Web Store dashboard Official
+  URL.
