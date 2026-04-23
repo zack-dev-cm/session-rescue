@@ -14,3 +14,7 @@
 - Google Search Console ownership verified with the HTML tag method.
 - Production URL should be selected as the Chrome Web Store dashboard Official
   URL.
+- Chrome Web Store draft created for item ID
+  `hoklaadapaobdbkeiacebnnciponcmnf`.
+- Submitted version `0.1.0` for review. Dashboard status after submission:
+  `Pending review`.
