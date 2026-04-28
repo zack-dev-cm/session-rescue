@@ -1,6 +1,7 @@
 # Session Rescue
 
 https://chromewebstore.google.com/detail/session-rescue/hoklaadapaobdbkeiacebnnciponcmnf
+
 Session Rescue is a local-first Chrome extension for saving browser session
 snapshots, restoring tabs after accidental loss, and exporting/importing
 portable backups.
