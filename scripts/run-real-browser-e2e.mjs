@@ -47,14 +47,12 @@ async function main() {
 
     const popup = await createPage(debugPort, `chrome-extension://${extensionId}/src/popup.html`);
     await popup.waitFor("Boolean(document.querySelector('#snapshot'))", 10_000, "popup snapshot button");
+    await popup.waitFor(`
+      !document.body.innerText.includes('Loading local snapshots') &&
+      !document.querySelector('#snapshot')?.disabled
+    `, 10_000, "popup initialized");
     await popup.send("Page.bringToFront");
-    await popup.evaluate(`
-      document.querySelector('#snapshot').dispatchEvent(new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window
-      }));
-    `);
+    await popup.evaluate("document.querySelector('#snapshot').click()");
     try {
       await popup.waitFor("document.body.innerText.includes('snapshots saved locally') || document.body.innerText.includes('Saved')", 10_000, "popup saved status");
     } catch (error) {
@@ -154,6 +152,9 @@ async function launchChrome(chromePath, debugPort, profileDir) {
     "--no-first-run",
     "--no-default-browser-check",
     "--disable-sync",
+    "--headless=new",
+    "--disable-gpu",
+    "--no-sandbox",
     "--disable-background-networking",
     "--disable-component-update",
     "--disable-features=Translate,MediaRouter",
@@ -162,10 +163,16 @@ async function launchChrome(chromePath, debugPort, profileDir) {
     "about:blank",
   ];
   const child = spawn(chromePath, args, { stdio: ["ignore", "ignore", "pipe"] });
+  let stderr = "";
+  child.stderr?.on("data", (chunk) => {
+    stderr += chunk.toString();
+  });
   await waitFor(async () => {
     const response = await fetch(`http://127.0.0.1:${debugPort}/json/version`).catch(() => null);
     return response?.ok;
-  }, 15_000);
+  }, 15_000, `Chrome remote debugging on ${debugPort}`).catch((error) => {
+    throw new Error(`${error.message}${stderr ? `; Chrome stderr: ${stderr.slice(0, 800)}` : ""}`);
+  });
   return child;
 }
 

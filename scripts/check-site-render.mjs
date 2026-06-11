@@ -174,14 +174,23 @@ async function launchChrome(debugPort, profileDir) {
     "--no-first-run",
     "--no-default-browser-check",
     "--disable-sync",
+    "--headless=new",
+    "--disable-gpu",
+    "--no-sandbox",
     "--disable-background-networking",
     "--disable-component-update",
     "about:blank",
   ], { stdio: ["ignore", "ignore", "pipe"] });
+  let stderr = "";
+  child.stderr?.on("data", (chunk) => {
+    stderr += chunk.toString();
+  });
   await waitFor(async () => {
     const response = await fetch(`http://127.0.0.1:${debugPort}/json/version`).catch(() => null);
     return response?.ok;
-  }, 15_000, "Chrome remote debugging");
+  }, 15_000, "Chrome remote debugging").catch((error) => {
+    throw new Error(`${error.message}${stderr ? `; Chrome stderr: ${stderr.slice(0, 800)}` : ""}`);
+  });
   return child;
 }
 

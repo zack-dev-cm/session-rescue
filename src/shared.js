@@ -120,6 +120,7 @@ export function restorePlan(snapshot) {
   const safeSnapshot = sanitizeSnapshot(snapshot);
   return safeSnapshot.windows
     .map((window) => ({
+      focused: Boolean(window.focused),
       urls: window.tabs.map((tab) => tab.url).filter(isRestorableUrl),
       pinnedIndexes: window.tabs
         .map((tab, index) => (tab.pinned ? index : -1))

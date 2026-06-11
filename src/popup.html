@@ -9,9 +9,10 @@
   <body class="popup">
     <main>
       <header class="topbar">
+        <div class="mark" aria-hidden="true"></div>
         <div>
           <h1>Session Rescue</h1>
-          <p id="status">Loading sessions...</p>
+          <p id="status" role="status" aria-live="polite">Loading local snapshots...</p>
         </div>
       </header>
       <section id="risk" class="risk hidden"></section>
@@ -24,6 +25,7 @@
         <h2>Latest snapshots</h2>
         <div id="sessions" class="session-list"></div>
       </section>
+      <p class="privacy-note">Local snapshots stay in Chrome on this device until you export or delete them.</p>
     </main>
     <script type="module" src="popup.js"></script>
   </body>

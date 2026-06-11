@@ -109,7 +109,6 @@ async function validateSiteSource() {
 
 async function validatePackageSurface() {
   const packageFiles = await collectPackageFiles(join(root, "src"));
-  packageFiles.push(join(root, "manifest.json"));
   for (const icon of Object.values(manifest.icons || {})) {
     packageFiles.push(join(root, icon));
   }

@@ -9,9 +9,10 @@
   <body>
     <main class="library">
       <header class="library-header">
+        <div class="mark large" aria-hidden="true"></div>
         <div>
           <h1>Session Library</h1>
-          <p id="summary">Loading local snapshots...</p>
+          <p id="summary" role="status" aria-live="polite">Loading local snapshots...</p>
         </div>
         <div class="toolbar">
           <button id="snapshot" class="primary">Snapshot now</button>
@@ -25,6 +26,7 @@
       </header>
       <input id="search" class="search" type="search" placeholder="Search titles, URLs, or domains">
       <section id="sessions" class="session-grid"></section>
+      <p class="privacy-note">Backups are plain JSON files. Review them before sharing because URLs and page titles can reveal private browsing context.</p>
     </main>
     <script type="module" src="library.js"></script>
   </body>

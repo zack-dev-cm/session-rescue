@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Session Rescue",
-  "description": "Save local browser session snapshots, restore tabs, and export portable backups.",
-  "version": "0.1.1",
+  "description": "Save and restore local Chrome tab sessions with autosave and portable JSON backups.",
+  "version": "0.1.5",
   "minimum_chrome_version": "120",
+  "homepage_url": "https://session-rescue.pages.dev/",
   "icons": {
     "16": "assets/icon-16.png",
     "32": "assets/icon-32.png",

@@ -1,6 +1,6 @@
 {
   "name": "session-rescue",
-  "version": "0.1.1",
+  "version": "0.1.5",
   "private": true,
   "type": "module",
   "description": "Local-first Chrome extension for browser session snapshots, restore, and portable backups.",
@@ -14,5 +14,8 @@
     "package": "npm run prepare:assets && node scripts/build-release.mjs",
     "test:e2e": "npm run package && node scripts/run-real-browser-e2e.mjs",
     "verify": "npm test && npm run validate && CWS_READINESS_OFFLINE=1 npm run check:cws-readiness && npm run check:site-render && npm run test:e2e"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "^6.2.5"
   }
 }

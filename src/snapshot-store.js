@@ -10,6 +10,7 @@ import {
 } from "./shared.js";
 
 let dbPromise;
+let snapshotWriteQueue = Promise.resolve();
 
 export async function getSnapshots() {
   const db = await openDatabase();
@@ -18,12 +19,29 @@ export async function getSnapshots() {
 }
 
 export async function saveSnapshot(snapshot, options = {}) {
-  const snapshots = mergeSnapshots(await getSnapshots(), snapshot, options);
-  await replaceSnapshots(snapshots);
-  return snapshots[0];
+  return withSnapshotWriteLock(async () => {
+    const snapshots = mergeSnapshots(await getSnapshots(), snapshot, options);
+    await replaceSnapshotsUnlocked(snapshots);
+    return snapshots[0];
+  });
 }
 
 export async function replaceSnapshots(snapshots) {
+  return withSnapshotWriteLock(() => replaceSnapshotsUnlocked(snapshots));
+}
+
+export async function importSnapshots(importedSnapshots) {
+  return withSnapshotWriteLock(async () => {
+    const merged = importedSnapshots.reduce((sessions, snapshot) => {
+      const exists = sessions.some((session) => session.signature === snapshot.signature);
+      return exists ? sessions : [snapshot, ...sessions];
+    }, await getSnapshots());
+    await replaceSnapshotsUnlocked(merged);
+    return merged;
+  });
+}
+
+async function replaceSnapshotsUnlocked(snapshots) {
   const db = await openDatabase();
   const transaction = db.transaction(SNAPSHOT_STORE, "readwrite");
   const store = transaction.objectStore(SNAPSHOT_STORE);
@@ -35,17 +53,21 @@ export async function replaceSnapshots(snapshots) {
 }
 
 export async function deleteSnapshot(id) {
-  const db = await openDatabase();
-  const transaction = db.transaction(SNAPSHOT_STORE, "readwrite");
-  await requestToPromise(transaction.objectStore(SNAPSHOT_STORE).delete(id));
-  await transactionDone(transaction);
+  return withSnapshotWriteLock(async () => {
+    const db = await openDatabase();
+    const transaction = db.transaction(SNAPSHOT_STORE, "readwrite");
+    await requestToPromise(transaction.objectStore(SNAPSHOT_STORE).delete(id));
+    await transactionDone(transaction);
+  });
 }
 
 export async function clearSnapshots() {
-  const db = await openDatabase();
-  const transaction = db.transaction(SNAPSHOT_STORE, "readwrite");
-  await requestToPromise(transaction.objectStore(SNAPSHOT_STORE).clear());
-  await transactionDone(transaction);
+  return withSnapshotWriteLock(async () => {
+    const db = await openDatabase();
+    const transaction = db.transaction(SNAPSHOT_STORE, "readwrite");
+    await requestToPromise(transaction.objectStore(SNAPSHOT_STORE).clear());
+    await transactionDone(transaction);
+  });
 }
 
 export async function getMeta(key, fallback = null) {
@@ -96,4 +118,10 @@ function transactionDone(transaction) {
     transaction.onerror = () => reject(transaction.error);
     transaction.onabort = () => reject(transaction.error);
   });
+}
+
+function withSnapshotWriteLock(task) {
+  const run = snapshotWriteQueue.then(task, task);
+  snapshotWriteQueue = run.catch(() => {});
+  return run;
 }

@@ -61,6 +61,7 @@ test("restorePlan preserves windows, order, pinned indexes, and active tab", () 
     }],
   });
   assert.deepEqual(restorePlan(snapshot), [{
+    focused: false,
     urls: ["https://a.test", "https://b.test"],
     pinnedIndexes: [0],
     activeTabIndex: 1,
